@@ -3,29 +3,24 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 
 
-# Step 1: Configure Gemini API key (make sure it's stored as an environment variable)
-
-load_dotenv()   # This must be called before using os.getenv
-
+# Load environment variables
+load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 
+# Define the booking assistant function
+def flight_booking(location):
+    if not location:
+        return "Please enter a valid destination."
+    
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    prompt = f"You are a helpful flight booking assistant. A user wants to fly to {location}. Respond appropriately."
+    response = model.generate_content(prompt)
+    return response.text.strip()
 
-# Step 2: Get user input
+# Get user input
 user_input = input("Where would you like to fly? ")
 
 
-
-# Step 3: Initialize Gemini model
-model = genai.GenerativeModel("gemini-1.5-flash")
-
-
-
-# Step 4: Generate a response using Gemini
-prompt = f"You are a helpful flight booking assistant. A user wants to fly to {user_input}. Respond appropriately."
-response = model.generate_content(prompt)
-
-
-
-# Step 5: Display the response
-print(response.text.strip())
+# Call the function and print the response
+print(flight_booking(user_input))
